@@ -94,7 +94,6 @@
     var currUserModel;
 
     //  全局变量 END
-
     function init() {
         //  隐藏不应该被显示的部分
         $("#id_home_sys_manager").hide();
@@ -109,8 +108,6 @@
         $("#id_user_manager").addClass("btn-select");
         //  查询所有用户
         selectAllUserList();
-
-
     }
 
     function selectAllUserList() {
@@ -121,7 +118,7 @@
             },
             type: "GET",
             success: function (ret) {
-                logI("成功",ret);
+                logI("成功", ret);
 
             }, error: function (ret) {
 
