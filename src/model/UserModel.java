@@ -8,9 +8,32 @@ import java.io.Serializable;
 public class UserModel implements Serializable {
     private String uID;
     private String uName;
+    private String uPass;
+    private String uSex;
     private String uType;
+
+    public String getuPass() {
+        return uPass;
+    }
+
+    public String getuSex() {
+        return uSex;
+    }
+
+    public void setuSex(String uSex) {
+        this.uSex = uSex;
+    }
+
+    public String getuAddress() {
+        return uAddress;
+    }
+
+    public void setuAddress(String uAddress) {
+        this.uAddress = uAddress;
+    }
+
+    private String uAddress;
     private String uMobile;
-    private String createTime;
 
     public String getuID() {
         return uID;
@@ -44,11 +67,7 @@ public class UserModel implements Serializable {
         this.uMobile = uMobile;
     }
 
-    public String getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(String createTime) {
-        this.createTime = createTime;
+    public void setuPass(String uPass) {
+        this.uPass = uPass;
     }
 }

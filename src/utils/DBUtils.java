@@ -11,8 +11,8 @@ import java.util.List;
  * MySQL相关操作类
  */
 public class DBUtils {
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/imooc";
-    private static final String DB_USER = "liulx";
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/demo";
+    private static final String DB_USER = "root";
     private static final String DB_PASS = "123456";
     private static final String DB_DRIVER_NAME = "com.mysql.jdbc.Driver";
     private static Connection conn;
@@ -116,13 +116,20 @@ public class DBUtils {
         }
     }
 
-
-    public static UserModel login(String uID, String uPass) throws SQLException {
+    /**
+     * 登录
+     *
+     * @param uName 用户名
+     * @param uPass 密码
+     * @return UserModel
+     * @throws SQLException e
+     */
+    public static UserModel login(String uName, String uPass) throws SQLException {
         //  登录操作
         //  连接数据库查询当前用户信息
         Connection conn = DBUtils.getInstance();
         Statement stmt = conn.createStatement();
-        ResultSet rs = stmt.executeQuery("SELECT uId, uName,uType,uMobile FROM PUSER WHERE uId = '" + uID + "' AND uPass = '" + uPass + "'");
+        ResultSet rs = stmt.executeQuery("SELECT uID, uName,uType,uMobile,uSex,uAddress FROM user WHERE uName = '" + uName + "' AND uPass = '" + uPass + "'");
         List<UserModel> userList = new ArrayList<>();
         UserModel userModel;
         //  如果不非法操作 就一个
@@ -132,6 +139,8 @@ public class DBUtils {
             userModel.setuID(rs.getString("uId"));
             userModel.setuMobile(rs.getString("uMobile"));
             userModel.setuType(rs.getString("uType"));
+            userModel.setuSex(rs.getString("uSex"));
+            userModel.setuAddress(rs.getString("uAddress"));
             userList.add(userModel);
         }
         if (userList.size() > 0) {
@@ -139,5 +148,30 @@ public class DBUtils {
         } else {
             return null;
         }
+    }
+
+    /**
+     * 查询用户列表
+     */
+    public static List<UserModel> selectAllUserList() throws SQLException {
+        //  登录操作
+        //  连接数据库查询当前用户信息
+        Connection conn = DBUtils.getInstance();
+        Statement stmt = conn.createStatement();
+        //  查询所有用户列表的接口只有系统管理员有 所以不能查到自己
+        ResultSet rs = stmt.executeQuery("SELECT uID, uName,uType,uMobile,uSex,uAddress FROM user WHERE uType <> '0'");
+        List<UserModel> userList = new ArrayList<>();
+        UserModel userModel;
+        while (rs.next()) {
+            userModel = new UserModel();
+            userModel.setuName(rs.getString("uName"));
+            userModel.setuID(rs.getString("uId"));
+            userModel.setuMobile(rs.getString("uMobile"));
+            userModel.setuType(rs.getString("uType"));
+            userModel.setuSex(rs.getString("uSex"));
+            userModel.setuAddress(rs.getString("uAddress"));
+            userList.add(userModel);
+        }
+        return userList;
     }
 }
