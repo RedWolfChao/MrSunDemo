@@ -11,7 +11,9 @@ import java.util.List;
  * MySQL相关操作类
  */
 public class DBUtils {
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/demo";
+    //  ?useUnicode=true&characterEncoding=utf8 加入这个是为了解决Java往SQl插入数据时中文乱码问题
+    //  URL : https://blog.csdn.net/lsr40/article/details/78736855
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/demo?useUnicode=true&characterEncoding=utf8";
     private static final String DB_USER = "root";
     private static final String DB_PASS = "123456";
     private static final String DB_DRIVER_NAME = "com.mysql.jdbc.Driver";
@@ -173,5 +175,34 @@ public class DBUtils {
             userList.add(userModel);
         }
         return userList;
+    }
+
+    /**
+     * 根据uID 删除指定用户
+     *
+     * @param uID
+     * @return
+     */
+    public static int delUser(String uID) {
+        return deleteData(DBUtils.getInstance(), "user", "uID", uID);
+    }
+
+    /**
+     * 添加用户
+     * ID
+     * 姓名
+     * 地址
+     * 性别
+     * 密码
+     */
+    public static int addUser(UserModel userModel) {
+        HashMap<String, String> inMap = new HashMap<>();
+        inMap.put("uName", userModel.getuName());
+        inMap.put("uAddress", userModel.getuAddress());
+        inMap.put("uSex", userModel.getuSex());
+        inMap.put("uMobile", userModel.getuMobile());
+        inMap.put("uType", userModel.getuType());
+        inMap.put("uPass", userModel.getuPass());
+        return insertData(DBUtils.getInstance(), "user", inMap);
     }
 }

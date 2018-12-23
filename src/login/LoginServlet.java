@@ -20,6 +20,7 @@ public class LoginServlet extends HttpServlet {
         HttpResult result = new HttpResult();
         // 设置响应内容类型
         response.setContentType("text/json; charset=utf-8");
+        response.setCharacterEncoding("utf-8");
 
         String uName = request.getParameter("uName");
         String uPass = request.getParameter("uPass");

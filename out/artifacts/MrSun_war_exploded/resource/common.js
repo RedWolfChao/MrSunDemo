@@ -4,8 +4,9 @@
  * @param MSG
  */
 function logI(TAG, MSG) {
-    console.group(TAG);
+    console.log("*********"+TAG+" START***********");
     console.log(MSG);
+    console.log("*********"+TAG+" END***********");
 }
 
 /**

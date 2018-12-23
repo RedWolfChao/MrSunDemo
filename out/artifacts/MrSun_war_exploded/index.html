@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>登录</title>
+</head>
+<script src="resource/jquery-3.3.1.min.js"></script>
+<script src="resource/common.js"></script>
+<style>
+
+    body {
+        background: url("resource/logbackpic.png") no-repeat;
+
+        width: 100%;
+        background-size: cover;
+        height: 100%;
+    }
+
+    #id_home_sys_manager {
+        display: flex;
+        border: solid 1px;
+        width: 100%;
+        height: 100%;
+    }
+
+    .left-list {
+        width: 20%;
+        border-right: solid 1px;
+        text-align: center;
+    }
+
+    .right-body {
+        width: 80%;
+    }
+
+    .btn-default {
+        background: gray;
+        margin: 2px;
+        color: #000;
+        padding: 5px;
+        display: block;
+    }
+
+    a {
+        text-decoration: none;
+        color: black;
+    }
+
+    .btn-select {
+        display: block;
+        font-weight: bold;
+        background: deepskyblue;
+        color: #FFF;
+        margin: 2px;
+        padding: 5px;
+    }
+
+    .right-body a {
+        text-decoration: darkblue;
+        color: darkblue;
+    }
+
+    .user_edit {
+        width: 50%;
+        background-color: white;
+        text-align: center;
+        border-radius: 5px;
+        margin: 10px;
+        padding: 10px;
+    }
+</style>
+<body onload="init()">
+<div id="id_login_div">
+    <div style="text-align: center;width:100%;font-size: 24px;">XXX系统</div>
+    <div style="text-align: center;width:100%;margin-top: 10px;">账号 :
+        <input id="id_input_user_id" placeholder="请输入账号" value="FUCK"/>
+    </div>
+    <div style="text-align: center;width:100%;margin-top: 10px;">密码 :
+        <input id="id_input_user_pass" placeholder="请输入密码" type="password" value="123456"/>
+    </div>
+    <div style="text-align: center;width:100%;margin-top: 10px;">
+        <button onclick="login()">登录</button>
+    </div>
+</div>
+<!-- 系统管理员界面 -->
+<div id="id_home_sys_manager" style="display: none;">
+    <!--左侧列表-->
+    <div class="left-list">
+        <a id="id_sys_man_user_man" class="btn-default" href="javascript:toUserManager()">用户管理</a>
+        <a id="id_sys_man_pro_man" class="btn-default" href="javascript:toProModelManager()">科研模板管理</a>
+        <a id="id_tea_my_pro" class="btn-default" href="javascript:toMyPro()">我的科研</a>
+        <a id="id_tea_info_edit" class="btn-default" href="javascript:toInfoEdit()">信息完善</a>
+    </div>
+
+    <!-- 右侧body -->
+    <div class="right-body">
+        <!-- 用户管理 [外部这几个 只能同时显示一个]-->
+        <div id="id_sys_manager_man">
+            <div style="padding: 5px;background: antiquewhite;border-bottom: solid 1px;">
+                <a href="javascript:addUser()">添加用户</a>
+            </div>
+            <!-- 列表 -->
+            <div style="width: 100%;display: flex;border-bottom: solid 1px;background-color: antiquewhite;">
+                <span style="width: 20%;font-weight: bold;text-align: center;">ID</span>
+                <span style="width: 20%;font-weight: bold;text-align: center;">用户名</span>
+                <span style="width: 20%;font-weight: bold;text-align: center;">地址</span>
+                <span style="width: 20%;font-weight: bold;text-align: center;">性别</span>
+                <span style="width: 20%;font-weight: bold;text-align: center;">操作</span>
+
+            </div>
+            <div id="id_user_list_tr"></div>
+        </div>
+        <!--科研项目管理-->
+        <div id="id_sys_pro_man">
+            <h1>我是科研项目管理</h1>
+        </div>
+        <!-- 添加用户 -->
+        <div id="id_sys_manager_add_user" style="display: flex;">
+            <div style="width: 25%" tag="占空">&nbsp;</div>
+            <div class="user_edit">
+                <h2>添加用户</h2>
+                <div style="display: flex;margin-top: 5px;">
+                    <span style="width: 40%">用户名 : </span>
+                    <input id="id_add_user_input_name" style="width:60%;" placeholder="请输入用户名" type="text"/>
+                </div>
+                <div style="display: flex;margin-top: 5px;">
+                    <span style="width: 40%">性别 : </span>
+                    <select id="id_add_user_input_sex" style="width:60%;">
+                        <option value="-1">请选择性别</option>
+                        <option value="男">男</option>
+                        <option value="女">女</option>
+                    </select>
+                </div>
+                <div style="display: flex;margin-top: 5px;">
+                    <span style="width: 40%">密码 : </span>
+                    <input id="id_add_user_input_pass" style="width:60%;" placeholder="请输入密码" type="password"/>
+                </div>
+                <div style="display: flex;margin-top: 5px;">
+                    <span style="width: 40%">确认密码 : </span>
+                    <input id="id_add_user_input_pass_ok" style="width:60%;" placeholder="请输入确认密码" type="password"/>
+                </div>
+                <div style="display: flex;margin-top: 5px;">
+                    <span style="width: 40%">用户权限 : </span>
+                    <input type="radio" name="add_user_input_type" value="2" checked/>教师
+                    <input type="radio" name="add_user_input_type" value="1"/>科研管理员
+                </div>
+                <div style="display: flex;margin-top: 5px;">
+                    <span style="width: 40%">所在地址 : </span>
+                    <input id="id_add_user_input_addr" style="width:60%;" placeholder="请输入所在地址" type="text"/>
+                </div>
+
+                <div style="display: flex;margin-top: 5px;">
+                    <span style="width: 40%">联系方式 : </span>
+                    <input id="id_add_user_input_mobile" style="width:60%;" placeholder="请输入联系方式" type="tel"/>
+                </div>
+                <div style="text-align: center;margin-top: 5px;">
+                    <button id="id_add_user_btn_cancel" style="margin-right: 5px;" onclick="addUserCancel()">取消</button>
+                    <button id="id_add_user_btn_submit" style="margin-left: 5px;" onclick="addUserSubmit()">提交</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script>
+    //  全局变量 START
+    var currUserModel;
+
+    //  全局变量 END
+    function init() {
+        //  禁用F5和右键弹出菜单 URL :https://www.cnblogs.com/xdot/p/5860479.html
+        //  他写的不对  可以照着看看改改
+        //  禁用F5 刷新界面
+        document.onkeydown = function () {
+            if (event.keyCode == 116) {
+                event.keyCode = 0;
+                event.cancelBubble = true;
+                return false;
+            }
+        };
+        //  禁止右键弹出菜单
+        document.oncontextmenu = function () {
+            return false;
+        };
+
+        //  隐藏不应该被显示的部分
+        //  系统管理界面
+        $("#id_home_sys_manager").hide();
+        //  系统管理添加用户
+        $("#id_sys_manager_add_user").hide();
+        //
+        //  系统管理用户管理按钮
+        $("#id_sys_man_user_man").hide();
+        //  系统管理科研项目管理按钮
+        $("#id_sys_man_pro_man").hide();
+        //  教师完善信息按钮
+        $("#id_tea_info_edit").hide();
+        //  教师 我的科研 按钮
+        $("#id_tea_my_pro").hide();
+
+
+    }
+
+    function toUserManager() {
+        //  ProModel Btn变回原来的颜色
+        $("#id_sys_man_pro_man").removeClass("btn-select");
+        //  UserManager Btn变色
+        $("#id_sys_man_user_man").addClass("btn-select");
+        //  用户管理界面
+        $("#id_sys_manager_man").show();
+        $("#id_sys_manager_add_user").hide();
+        $("#id_sys_pro_man").hide();
+        //  查询所有用户
+        selectAllUserList();
+    }
+
+    function selectAllUserList() {
+        $.ajax({
+            url: "sys",//urlPatterns
+            data: {
+                urlType: "selectAllUserList"
+            },
+            contentType: 'text/json,charset=utf-8',
+            type: "GET",
+            success: function (ret) {
+                //  对数据处理 然后通过For循环将用户列表展示
+                logI("selectAllUserList", ret)
+                if (!isEmpty(ret) && ret.code === "0") {
+                    var list = ret.data;
+                    var contentJS = "";
+                    for (var i = 0; i < list.length; i++) {
+                        var data = list[i];
+                        logI("数据" + i, data);
+                        /**
+                         * uAddress: "??"
+                         uID: "1234"
+                         uMobile: "18811055062"
+                         uName: "YXY"
+                         uSex: "?"
+                         uType: "1"
+                         */
+                        contentJS += "<div style='width: 100%;display: flex;background-color: white;'>\n" +
+                            "    <span style='width: 20%;text-align: center;'>" + data.uID + "</span>\n" +
+                            "    <span style='width: 20%;text-align: center;'>" + data.uName + "</span>\n" +
+                            "    <span style='width: 20%;text-align: center;'>" + data.uAddress + "</span>\n" +
+                            "    <span style='width: 20%;text-align: center;'>" + data.uSex + "</span>\n" +
+                            "    <span style='width: 20%;text-align: center;'><a href='javascript:delUser(" + data.uID + ")'>删除</a></span>\n" +
+                            "    </div>";
+                    }
+                    $("#id_user_list_tr").html(contentJS);
+                }
+            }, error: function (ret) {
+
+            }
+        });
+    }
+
+    //  进入系统管理员界面
+    function toSysUI() {
+        //  展示系统管理员的相关部分
+        //  系统管理界面
+        $("#id_home_sys_manager").show();
+        //  系统管理用户管理按钮
+        $("#id_sys_man_user_man").show();
+        //  系统管理科研项目管理按钮
+        $("#id_sys_man_pro_man").show();
+        //  默认进入用户管理
+        toUserManager();
+    }
+    //  科研模板管理首页
+    function toProModelManager() {
+        //  UserManager Btn变回原来的颜色
+        $("#id_sys_man_pro_man").addClass("btn-select");
+        //  ProModel Btn变色
+        $("#id_sys_man_user_man").removeClass("btn-select");
+        //  隐藏用户管理界面
+        $("#id_sys_manager_man").hide();
+        $("#id_sys_manager_add_user").hide();
+        //  展示科研项目管理页面
+        $("#id_sys_pro_man").show();
+    }
+
+    function toMyPro() {
+        $("#id_tea_my_pro").addClass("btn-select");
+        $("#id_tea_info_edit").removeClass("btn-select");
+    }
+
+    function toInfoEdit() {
+        $("#id_tea_info_edit").addClass("btn-select");
+        $("#id_tea_my_pro").removeClass("btn-select");
+    }
+
+    function login() {
+        var uName = $("#id_input_user_id").val();
+        var uPass = $("#id_input_user_pass").val();
+        if (isEmpty(uName)) {
+            alert("请输入用户名!");
+            return;
+        }
+        if (isEmpty(uPass)) {
+            alert("请输入密码!");
+            return;
+        }
+
+        $.ajax({
+            url: "login",//urlPatterns
+            data: {
+                uName: uName,
+                uPass: uPass
+            },
+            contentType: 'text/json,charset=utf-8',
+            type: "GET",
+            success: function (ret) {
+                //
+                if (!isEmpty(ret)) {
+                    if (ret.code === "0") {
+                        currUserModel = ret;
+                        logI("登录成功", ret);
+                        var userModel = ret.data;
+                        //  登录成功的时候判断用户权限是什么 如果是超级管理员 就要进入超级管理员界面
+                        var uType = userModel.uType;
+                        //  判断
+                        if (uType === "0") {
+                            //  超级管理员
+                            $("#id_home_sys_manager").show();
+                            $("#id_login_div").hide();
+                            //  登录后应该默认进入用户管理
+                            toSysUI();
+                        } else if (uType === "1") {
+                            //  科研管理员
+                            alert("您的角色是科研管理员,很抱歉,您的功能还没有开发");
+                        } else if (uType === "2") {
+                            //  教师
+                            alert("您的角色是教师,很抱歉,您的功能还没有开发");
+                        } else {
+                            alert("异常登录");
+                        }
+
+                        logI("成功", ret);
+                    } else {
+                        alert(ret.msg);
+                    }
+                }
+
+            }, error: function (ret) {
+                logI("失败", ret);
+            }
+        });
+    }
+
+    function addUser() {
+        console.log("addUser");
+        //  添加用户 隐藏用户管理 显示添加用户
+        $("#id_sys_manager_add_user").show();
+        $("#id_sys_manager_man").hide();
+        $("#id_sys_pro_man").hide();
+    }
+
+    function delUser(uID) {
+        //  confirm 解释 http://www.w3school.com.cn/htmldom/met_win_confirm.asp
+        if (confirm("确定要删除该用户吗")) {
+            //  ajax 解释 http://www.w3school.com.cn/jquery/ajax_ajax.asp
+            $.ajax({
+                url: 'sys',
+                data: {
+                    urlType: "delUser",
+                    uID: uID
+                },
+                success: function (ret) {
+                    if (!isEmpty(ret) && ret.code === "0") {
+                        logI("删除用户成功", ret);
+                        // 刷新界面
+                        selectAllUserList();
+                    } else {
+                        alert("删除失败!!!!!!滚吧");
+                    }
+
+                },
+                error: function (ret) {
+                    alert("网络异常,请稍后重试");
+                    logI("删除用户ERROR", ret);
+                }
+            });
+        }
+    }
+
+    //  添加用户取消按钮
+    function addUserCancel() {
+        if (confirm("确定要取消添加用户吗")) {
+            //  点击取消就返回到上一页
+            //  上一页就是用户管理部分
+            //  将当前页面隐藏
+            //  添加用户 隐藏用户管理 显示添加用户
+            $("#id_sys_manager_add_user").hide();
+            //  显示用户管理部分
+            $("#id_sys_manager_man").show();
+        }
+    }
+
+    //  添加用户提交按钮
+    function addUserSubmit() {
+        //  提交按钮
+        //  取出数据
+        var name = $("#id_add_user_input_name").val();
+        var pass = $("#id_add_user_input_pass").val();
+        var passOk = $("#id_add_user_input_pass_ok").val();
+        var address = $("#id_add_user_input_addr").val();
+        var mobile = $("#id_add_user_input_mobile").val();
+        //  获取当前选择的性别
+        var sex = $("#id_add_user_input_sex").val();
+        //  获取权限  由于默认是教师[2] 所以不需要校验空
+        var type = $("input[name='add_user_input_type']:checked").val();
+        //  非空校验
+        if (isEmpty(name)) {
+            alert("请输入用户名");
+            return;
+        }
+
+        if (isEmpty(pass)) {
+            alert("请输入密码");
+            return;
+        }
+
+        if (isEmpty(passOk)) {
+            alert("请输入确认密码");
+            return;
+        }
+
+        if (isEmpty(address)) {
+            alert("请输入所在地址");
+            return;
+        }
+
+        if (isEmpty(mobile)) {
+            alert("请输入联系方式");
+            return;
+        }
+        if (sex === "-1") {
+            alert("请选择性别");
+            return;
+        }
+        //  最后还需要判断密码和确认密码是不是相同
+        if (pass !== passOk) {
+            alert("密码和确认密码不同!");
+            return;
+        }
+        //  校验通过 ajax请求添加用户
+        $.ajax({
+            url: 'sys',
+            data: {
+                urlType: "addUser",
+                uName: encodeURI(name),
+                uAddress: encodeURI(address),
+                uMobile: mobile,
+                uSex: encodeURI(sex),
+                uType: type,
+                uPass: pass
+            },
+            contentType: 'text/json,charset=utf-8',
+            success: function (ret) {
+                if (!isEmpty(ret) && ret.code === "0") {
+                    logI("添加用户成功", ret);
+                    //  添加用户成功之后返回上一页
+                    //  添加用户 隐藏用户管理 显示添加用户
+                    $("#id_sys_manager_add_user").hide();
+                    //  显示用户管理部分
+                    $("#id_sys_manager_man").show();
+                    //  然后刷新列表[由于添加了用户 所以列表需要刷新]
+                    selectAllUserList();
+                } else {
+                    logI("添加用户失败", ret);
+                    alert("添加失败!!");
+                }
+            },
+            error: function (ret) {
+                alert("网络异常,请稍后重试");
+                logI("添加用户ERROR", ret);
+            }
+        });
+
+    }
+</script>
+</body>
+</html>
